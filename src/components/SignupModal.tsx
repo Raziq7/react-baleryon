@@ -1,32 +1,32 @@
 import React,{ useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
-import type { RootState,AppDispatch } from "@/store/store"
-import { signupUserThunk } from "@/store/thunks/authThunks"
-import { submitOtpAction } from "@/store/action/authAction"
+import type { RootState,AppDispatch } from "../store/store"
+import { signupUserThunk } from "../store/thunks/authThunks"
+import { submitOtpAction } from "../store/action/authAction"
 
 import {
   Card,
   CardContent,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
-import { Label } from "@/components/ui/label"
-import { Input } from "@/components/ui/input"
-import { Button } from "@/components/ui/button"
+} from "../components/ui/card"
+import { Label } from "../components/ui/label"
+import { Input } from "../components/ui/input"
+import { Button } from "../components/ui/button"
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select"
+} from "../components/ui/select"
 import {
   InputOTP,
   InputOTPGroup,
   InputOTPSeparator,
   InputOTPSlot,
-} from "@/components/ui/input-otp"
-import type { SignUpRequest } from "@/store/types/auth"
+} from "../components/ui/input-otp"
+import type { SignUpRequest } from "../store/types/auth"
 
 type Props = {
   onClose: () => void

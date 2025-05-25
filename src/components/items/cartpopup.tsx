@@ -1,61 +1,36 @@
-"use client";
-
 import React, { useEffect } from "react";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
-import { Badge } from "@/components/ui/badge";
-import Image from "next/image";
+import { Popover, PopoverContent, PopoverTrigger } from "../../components/ui/popover";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../../components/ui/tooltip";
+import { Badge } from "../../components/ui/badge";
 import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch } from "@/store/store";
-import { Button } from "@/components/ui/button";
+import type { AppDispatch } from "../../store/store";
+import { Button } from "../../components/ui/button";
 import { Trash2 } from "lucide-react";
-import Link from "next/link";
+import { Link } from "react-router-dom";
 import {
   clearCartThunk,
   fetchCartItemsThunk,
   removeFromCartThunk,
   updateCartQuantityThunk,
-} from "@/store/thunks/cartThunks";
-import { selectSubtotal } from "@/store/slices/cartSclice";
-import type { RootState } from "@/store/store.ts";
+} from "../../store/thunks/cartThunks";
+import { selectSubtotal } from "../../store/slices/cartSclice";
+import type { RootState } from "../../store/store";
 
-export interface CartData {
-  productId: string;
-  quantity: number;
-  size: string;
-  color: string;
-}
-
-// Populated product info inside cart
-export interface ProductInCart {
-  _id: string;
-  productName: string;
-  image: string[]; 
-  price: number;
-}
-
-// Final CartProduct with populated product details
 export interface CartProduct {
   _id: string;
-  productId: ProductInCart; // Fully populated object, not just string
+  productId: {
+    _id: string;
+    productName: string;
+    image: string[];
+    price: number;
+  };
   quantity: number;
   size: string;
   color: string;
   price: number;
-  productName : string;
-  image: string[]; 
+  productName: string;
+  image: string[];
 }
-
-// Adjust based on your project
 
 function Cartpopup() {
   const dispatch = useDispatch<AppDispatch>();
@@ -66,23 +41,17 @@ function Cartpopup() {
     dispatch(fetchCartItemsThunk());
   }, [dispatch]);
 
-  const handleQuantityChange = (
-    userId: string,
-    item: CartProduct,
-    increase: boolean
-  ) => {
+  const handleQuantityChange = (userId: string, item: CartProduct, increase: boolean) => {
     const productId = item.productId?._id || item._id;
     const newQuantity = increase ? item.quantity + 1 : item.quantity - 1;
     if (newQuantity < 1) return;
 
-    dispatch(
-      updateCartQuantityThunk({
-        userId,
-        cartId: item._id,
-        productId,
-        quantity: newQuantity,
-      })
-    );
+    dispatch(updateCartQuantityThunk({
+      userId,
+      cartId: item._id,
+      productId,
+      quantity: newQuantity,
+    }));
   };
 
   const removeProductFromCart = (cartId: string) => {
@@ -104,7 +73,7 @@ function Cartpopup() {
             {items.length}
           </Badge>
         )}
-        <Image
+        <img
           className="cursor-pointer"
           height={24}
           width={24}
@@ -116,7 +85,7 @@ function Cartpopup() {
       <PopoverContent className="w-96">
         {items?.length === 0 || !items ? (
           <div className="w-full max-w-md text-center py-4">
-            <Image
+            <img
               src="/emptyCart.png"
               alt="empty cart"
               width={250}
@@ -143,17 +112,11 @@ function Cartpopup() {
                   className="px-4 py-2 bg-white hover:bg-gray-50 transition"
                 >
                   <div className="flex items-start space-x-4">
-                    <div className="relative w-24 h-24 flex-shrink-0">
-                      <Image
-                        fill
-                        src={
-                          typeof item.productId === "object"
-                            ? item.productId.image?.[0] ?? "/fallback.jpg"
-                            : "/fallback.jpg"
-                        }
-                        
-                        alt="Product Image"
-                        className="object-cover rounded"
+                    <div className="w-24 h-24 flex-shrink-0 relative">
+                      <img
+                        src={item.productId?.image?.[0] || "/fallback.jpg"}
+                        alt="Product"
+                        className="object-cover rounded w-full h-full"
                       />
                     </div>
 
@@ -163,7 +126,7 @@ function Cartpopup() {
                           {item?.productId?.productName || item?.productName}
                         </h3>
                         <button onClick={() => removeProductFromCart(item._id)}>
-                          <Image
+                          <img
                             width={16}
                             height={16}
                             src="/icons/close.png"
@@ -225,7 +188,7 @@ function Cartpopup() {
                 </span>
               </div>
               <div className="flex gap-2.5">
-                <Link href="/checkout" className="w-full">
+                <Link to="/checkout" className="w-full">
                   <button className="w-full bg-black text-white py-2 rounded hover:bg-gray-800">
                     Checkout
                   </button>

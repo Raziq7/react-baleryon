@@ -10,21 +10,21 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog";
+} from "../../components/ui/dialog";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/popover";
-import { Button } from "@/components/ui/button";
+} from "../../components/ui/popover";
+import { Button } from "../../components/ui/button";
 
 import LoginForm from "../items/loginForm";
 import Cartpopup from "../items/cartpopup";
-import SignupModal from "@/components/SignupModal";
+import SignupModal from "../../components/SignupModal";
 
-import useAuthToken from "@/hooks/useAuthToken";
-import { logoutUserThunk } from "@/store/thunks/authThunks";
-import type { AppDispatch } from "@/store/store";
+import useAuthToken from "../../hooks/useAuthToken";
+import { logoutUserThunk } from "../../store/thunks/authThunks";
+import type { AppDispatch } from "../../store/store";
 
 const Header: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();

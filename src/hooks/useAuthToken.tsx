@@ -1,8 +1,6 @@
-'use client'
-
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { RootState } from '@/store/store';
+import type { RootState } from '../store/store'; // Update this path if needed
 
 const useAuthToken = () => {
   const { user } = useSelector((state: RootState) => state.auth);
@@ -10,7 +8,7 @@ const useAuthToken = () => {
 
   useEffect(() => {
     try {
-      const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
+      const token = localStorage.getItem('token');
       setIsLogin(!!token);
     } catch (err) {
       console.error('Error accessing localStorage:', err);

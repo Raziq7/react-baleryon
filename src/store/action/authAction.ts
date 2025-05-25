@@ -9,9 +9,9 @@ import {
   USER_LOGOUT_REQUEST,
   USER_LOGOUT_SUCCESS,
   USER_LOGOUT_ERR
-} from '@/constant/authConstant';
-import type { AppDispatch } from '@/store/store';
-import api from '@/utils/baseUrl';
+} from '../../constant/authConstant';
+import type { AppDispatch } from '../../store/store';
+import api from '../../utils/baseUrl';
 import { AxiosError } from 'axios';
 
 interface User {
