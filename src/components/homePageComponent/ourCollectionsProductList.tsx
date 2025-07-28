@@ -8,7 +8,7 @@ function OurCollectionsProductList() {
 
   const fetchProductList = async function () {
     const response = await axios.get(
-      `http://localhost:8080/api/user/product/getProducts?page=${1}&limit=${10}`
+      `http://18.212.40.220/api/user/product/getProducts?page=${1}&limit=${10}`
     );
     setProductList(response.data.products);
   };

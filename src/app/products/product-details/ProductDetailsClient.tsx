@@ -95,8 +95,8 @@ export default function ProductDetailsClient() {
       await dispatch(addToCartThunk(productPayload)).unwrap();
       toast.success("Added to cart");
     } catch (err) {
-      console.log(err,"errrrrrrrrrrrrrrrrororororoorororororororor");
-      
+      console.log(err, "errrrrrrrrrrrrrrrrororororoorororororororor");
+
       toast.error(err as string); // Will now correctly show: "User is not logged in"
     }
   };

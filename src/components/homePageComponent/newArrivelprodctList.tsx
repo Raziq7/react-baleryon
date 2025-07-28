@@ -9,7 +9,7 @@ const NewArrivelprodctList: React.FC = () => {
   const [productList, setProductList] = useState<ProductDetail[]>([]);
   const [loading, setLoading] = useState<Boolean>(false);
 
-  const apiBaseUrl = "http://localhost:8080";
+  const apiBaseUrl = "http://18.212.40.220";
 
   const fetchProductList = async () => {
     try {
