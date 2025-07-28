@@ -1,8 +1,5 @@
-'use client';
-
 import React, { useEffect, useState } from 'react';
-import Image from 'next/image';
-import api from '@/utils/baseUrl';
+import api from '../../utils/baseUrl';
 
 type User = {
   firstName: string;
@@ -20,7 +17,7 @@ type Address = {
   number: string;
 };
 
-export default function Profile() {
+const Profile: React.FC = () => {
   const [user, setUser] = useState<User | null>(null);
   const [address, setAddress] = useState<Address | null>(null);
   const [loading, setLoading] = useState(true);
@@ -54,13 +51,10 @@ export default function Profile() {
       <div className="max-w-4xl mx-auto bg-gray-100 dark:bg-gray-900 rounded-xl shadow-lg overflow-hidden">
         <div className="flex flex-col sm:flex-row items-center sm:items-start sm:space-x-8 p-8">
           <div className="relative w-32 h-32 rounded-full overflow-hidden border-4 border-black dark:border-white shadow-md">
-            <Image
+            <img
               src={user?.avatarUrl || '/profile.jpg'}
               alt="User Avatar"
-              fill
-              className="object-cover"
-              sizes="128px"
-              priority
+              className="object-cover w-full h-full"
             />
           </div>
 
@@ -99,4 +93,6 @@ export default function Profile() {
       </div>
     </div>
   );
-}
+};
+
+export default Profile;

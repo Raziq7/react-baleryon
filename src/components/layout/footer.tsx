@@ -1,5 +1,6 @@
-import Link from "next/link";
+// import Link from "next/link";
 import React from "react";
+import { Link } from "react-router-dom";
 
 function Footer() {
   return (
@@ -21,16 +22,16 @@ function Footer() {
               <ol className="space-y-2">
                 <li className="text-lg md:text-xl font-bold">Information</li>
                 <li className="text-sm md:text-base">
-                  <Link href={"about-us"}>About us</Link>
+                  <Link to={"about-us"}>About us</Link>
                 </li>
                 <li className="text-sm md:text-base">
-                  <Link href={"contact-us"}>Contact Us</Link>
+                  <Link to={"contact-us"}>Contact Us</Link>
                 </li>
                 <li className="text-sm md:text-base">
-                  <Link href={"privacy-policy"}>Privacy Policy</Link>
+                  <Link to={"privacy-policy"}>Privacy Policy</Link>
                 </li>
                 <li className="text-sm md:text-base">
-                  <Link href={"terms-condition"}>Terms & Condition</Link>
+                  <Link to={"terms-condition"}>Terms & Condition</Link>
                 </li>
               </ol>
             </div>
@@ -39,10 +40,10 @@ function Footer() {
               <ol className="space-y-2">
                 <li className="text-lg md:text-xl font-bold">Our service</li>
                 <li className="text-sm md:text-base">
-                  <Link href={"cancel-refund"}>Cancel Refund</Link>
+                  <Link to={"cancel-refund"}>Cancel Refund</Link>
                 </li>
                 <li className="text-sm md:text-base">
-                  <Link href={"shipping-policy"}>Shipping-Policy</Link>
+                  <Link to={"shipping-policy"}>Shipping-Policy</Link>
                 </li>
                 <li className="text-sm md:text-base">FAQs</li>
               </ol>
@@ -53,7 +54,7 @@ function Footer() {
                 <li className="text-lg md:text-xl font-bold">My Account</li>
                 <li className="text-sm md:text-base">My Account</li>
                 <li className="text-sm md:text-base">
-                  <Link href={"orderList"}>Order History</Link>
+                  <Link to={"orderList"}>Order History</Link>
                 </li>
                 <li className="text-sm md:text-base">Wishlist</li>
               </ol>

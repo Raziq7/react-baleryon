@@ -1,41 +1,41 @@
-import React,{ useEffect, useState } from "react"
-import { useDispatch, useSelector } from "react-redux"
-import type { RootState,AppDispatch } from "../store/store"
-import { signupUserThunk } from "../store/thunks/authThunks"
-import { submitOtpAction } from "../store/action/authAction"
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import type { RootState, AppDispatch } from "../store/store";
+import { signupUserThunk } from "../store/thunks/authThunks";
+import { submitOtpAction } from "../store/action/authAction";
 
 import {
   Card,
   CardContent,
   CardHeader,
   CardTitle,
-} from "../components/ui/card"
-import { Label } from "../components/ui/label"
-import { Input } from "../components/ui/input"
-import { Button } from "../components/ui/button"
+} from "../components/ui/card";
+import { Label } from "../components/ui/label";
+import { Input } from "../components/ui/input";
+import { Button } from "../components/ui/button";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "../components/ui/select"
+} from "../components/ui/select";
 import {
   InputOTP,
   InputOTPGroup,
   InputOTPSeparator,
   InputOTPSlot,
-} from "../components/ui/input-otp"
-import type { SignUpRequest } from "../store/types/auth"
+} from "../components/ui/input-otp";
+import type { SignUpRequest } from "../store/types/auth";
 
 type Props = {
-  onClose: () => void
-}
+  onClose: () => void;
+};
 
 export default function SignupModal({ onClose }: Props) {
   const dispatch = useDispatch<AppDispatch>();
-  const [isFormSubmit, setIsFormSubmit] = useState(false)
-  const [showPassword, setShowPassword] = useState(false)
+  const [isFormSubmit, setIsFormSubmit] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const [credentialsState, setCredentialsState] = useState({
     firstName: "",
@@ -46,7 +46,7 @@ export default function SignupModal({ onClose }: Props) {
     password: "",
     confirmPassword: "",
     otp: "",
-  })
+  });
 
   const [errors, setErrors] = useState({
     firstName: "",
@@ -56,9 +56,11 @@ export default function SignupModal({ onClose }: Props) {
     password: "",
     confirmPassword: "",
     gender: "",
-  })
+  });
 
-  const { loading, isAuthenticated } = useSelector((state: RootState) => state.auth)
+  const { loading, isAuthenticated } = useSelector(
+    (state: RootState) => state.auth
+  );
 
   const validateSignUp = () => {
     const newErrors = {
@@ -69,50 +71,50 @@ export default function SignupModal({ onClose }: Props) {
       password: "",
       confirmPassword: "",
       gender: "",
-    }
+    };
 
     if (!credentialsState.firstName.trim()) {
-      newErrors.firstName = "First name is required"
+      newErrors.firstName = "First name is required";
     }
     if (!credentialsState.lastName.trim()) {
-      newErrors.lastName = "Last name is required"
+      newErrors.lastName = "Last name is required";
     }
 
-    const mobilePattern = /^\d{10}$/
+    const mobilePattern = /^\d{10}$/;
     if (!mobilePattern.test(credentialsState.mobileNo)) {
-      newErrors.mobileNo = "Enter a valid 10-digit mobile number"
+      newErrors.mobileNo = "Enter a valid 10-digit mobile number";
     }
 
     if (!credentialsState.gender) {
-      newErrors.gender = "Select a gender"
+      newErrors.gender = "Select a gender";
     }
 
-    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailPattern.test(credentialsState.email)) {
-      newErrors.email = "Enter a valid email"
+      newErrors.email = "Enter a valid email";
     }
 
     const passwordPattern =
-      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@#$%^&*!?])[A-Za-z\d@#$%^&*!?]{8,}$/
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@#$%^&*!?])[A-Za-z\d@#$%^&*!?]{8,}$/;
     if (!credentialsState.password) {
-      newErrors.password = "Password is required"
+      newErrors.password = "Password is required";
     } else if (!passwordPattern.test(credentialsState.password)) {
       newErrors.password =
-        "Password must be 8+ chars with uppercase, lowercase, number & special char"
+        "Password must be 8+ chars with uppercase, lowercase, number & special char";
     }
 
     if (credentialsState.password !== credentialsState.confirmPassword) {
-      newErrors.confirmPassword = "Passwords do not match"
+      newErrors.confirmPassword = "Passwords do not match";
     }
 
-    setErrors(newErrors)
-    return !Object.values(newErrors).some((err) => err)
-  }
+    setErrors(newErrors);
+    return !Object.values(newErrors).some((err) => err);
+  };
 
   const handleFormSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    const isValid = validateSignUp()
-    if (!isValid) return
+    e.preventDefault();
+    const isValid = validateSignUp();
+    if (!isValid) return;
 
     const payload: SignUpRequest = {
       firstName: credentialsState.firstName,
@@ -122,17 +124,17 @@ export default function SignupModal({ onClose }: Props) {
       password: credentialsState.password,
       gender: credentialsState.gender,
     };
-    await dispatch(signupUserThunk(payload))
-  }
+    await dispatch(signupUserThunk(payload));
+  };
 
   useEffect(() => {
     if (isAuthenticated) {
-      setIsFormSubmit(true)
+      setIsFormSubmit(true);
     }
-  }, [isAuthenticated])
+  }, [isAuthenticated]);
 
   const handleOtpSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
+    e.preventDefault();
     dispatch(
       submitOtpAction({
         email: credentialsState.email,
@@ -143,8 +145,8 @@ export default function SignupModal({ onClose }: Props) {
         password: credentialsState.password,
         gender: credentialsState.gender,
       })
-    )
-  }
+    );
+  };
 
   return (
     <div className="fixed w-full inset-0 z-50 flex items-center justify-center bg-black/50">
@@ -174,13 +176,14 @@ export default function SignupModal({ onClose }: Props) {
                     }
                     render={({ slots }) => (
                       <InputOTPGroup>
-                       {slots.map((slot, index) => (
-  <React.Fragment key={index}>
-    <InputOTPSlot index={index} {...slot} />
-    {index !== slots.length - 1 && <InputOTPSeparator />}
-  </React.Fragment>
-))}
-
+                        {slots.map((slot, index) => (
+                          <React.Fragment key={index}>
+                            <InputOTPSlot index={index} {...slot} />
+                            {index !== slots.length - 1 && (
+                              <InputOTPSeparator />
+                            )}
+                          </React.Fragment>
+                        ))}
                       </InputOTPGroup>
                     )}
                   />
@@ -344,5 +347,5 @@ export default function SignupModal({ onClose }: Props) {
         </Card>
       </div>
     </div>
-  )
+  );
 }

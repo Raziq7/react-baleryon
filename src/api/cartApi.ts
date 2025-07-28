@@ -1,35 +1,43 @@
 import api from "../utils/baseUrl";
-import { AxiosError } from "axios";
+import axios, { AxiosError } from "axios";
 import type { CartData, CartResponse } from "../store/types/cart";
 
 interface ApiErrorResponse {
   message: string;
 }
 
-// ✅ Add to Cart
-export const addToCartData = async (
-  cartData: CartData
-): Promise<CartResponse> => {
-  const token = localStorage.getItem("token");
-  if (!token) return Promise.reject(new Error("User is not logged in"));
+// | Add to Cart
+export const addToCartData = async (cartData: CartData) => {
+  try {
+    const token = localStorage.getItem("token");
+    console.log(token, "slkdjfalskjhdfaklsjdhfsldh");
 
-  const config = {
-    headers: {
-      Authorization: `Bearer ${token}`,
-      "Content-Type": "application/json",
-    },
-  };
+    if (!token) {
+      return Promise.reject(new Error("User is not logged in"));
+    }
 
-  const response = await api.post<CartResponse>(
-    "/api/user/cart/",
-    cartData,
-    config
-  );
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    };
 
-  return response.data;
+    const response = await api.post<CartResponse>(
+      "/api/user/cart/",
+      cartData,
+      config
+    );
+
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      throw new (error.response?.data?.message || "Login failed")();
+    }
+  }
 };
 
-// ✅ Fetch Cart
+// | Fetch Cart
 export const fetchCartData = async (): Promise<CartResponse | undefined> => {
   const token = localStorage.getItem("token");
   if (!token) {
@@ -52,7 +60,7 @@ export const fetchCartData = async (): Promise<CartResponse | undefined> => {
   }
 };
 
-// ✅ Remove from Cart
+// | Remove from Cart
 export const removeFromCartData = async (cartId: string): Promise<void> => {
   const token = localStorage.getItem("token");
   if (!token) {
@@ -73,9 +81,14 @@ export const removeFromCartData = async (cartId: string): Promise<void> => {
   }
 };
 
-// ✅ Update Cart Item
+// | Update Cart Item
 export const updateCartItemData = async (
-  payload: { userId: string; cartId: string; productId: string; quantity: number },
+  payload: {
+    userId: string;
+    cartId: string;
+    productId: string;
+    quantity: number;
+  },
   token: string
 ) => {
   return await api.put(
@@ -93,7 +106,7 @@ export const updateCartItemData = async (
   );
 };
 
-// ✅ Clear Cart
+// | Clear Cart
 export const clearCartData = async (): Promise<void> => {
   const token = localStorage.getItem("token");
   if (!token) {

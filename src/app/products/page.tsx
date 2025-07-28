@@ -7,13 +7,15 @@ import {
 } from "../../components/ui/accordion";
 import { Checkbox } from "../../components/ui/checkbox";
 import { ProductListCard } from "../../components/items/productCard";
-import type { ProductDetailInterface } from "../../store/types/product";
+import type { ProductDetail } from "../../store/types/product";
 import api from "../../utils/baseUrl"; // <-- Ensure this is correctly set up
 
 function ShopPage() {
-  const [productList, setProductList] = useState<ProductDetailInterface[]>([]);
+  const [productList, setProductList] = useState<ProductDetail[]>([]);
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [selectedColors, setSelectedColors] = useState<string[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
 
   const toggleFilter = (
     value: string,
@@ -26,6 +28,9 @@ function ShopPage() {
 
   useEffect(() => {
     const fetchProductList = async () => {
+      setLoading(true);
+      setError(null); // Reset error before fetching
+
       const query = new URLSearchParams();
       query.append("page", "1");
       query.append("limit", "10");
@@ -42,9 +47,18 @@ function ShopPage() {
         const response = await api.get(
           `/api/user/product/getProducts?${query.toString()}`
         );
-        setProductList(response.data.products);
+        console.log(response.data.products); // Log to check response structure
+
+        if (response.data.products.length === 0) {
+          setError("No products found for the selected filters.");
+        } else {
+          setProductList(response.data.products);
+        }
       } catch (error) {
         console.error("Error fetching products:", error);
+        setError("An error occurred while fetching the products.");
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -76,7 +90,7 @@ function ShopPage() {
       <div className="mt-6 md:mt-10 mb-12 md:mb-18 text-center">
         <h2 className="text-2xl md:text-3xl">SHOP BY CATEGORIES</h2>
         <p className="text-[#7A7879] text-sm md:text-base">
-          our new cozy collection is made for you
+          Our new cozy collection is made for you
         </p>
       </div>
 
@@ -89,7 +103,7 @@ function ShopPage() {
               </AccordionTrigger>
               <AccordionContent>
                 <ol className="flex flex-col gap-2">
-                  {["Shirt", "Jacket", "T-shirt", "Hoodie"].map((cat) => (
+                  {["oversized-t-shirts", "full-sleev", "T-shirt", "Hoodie"].map((cat) => (
                     <li key={cat}>
                       {renderCheckbox(
                         cat.toLowerCase(),
@@ -124,11 +138,35 @@ function ShopPage() {
         </div>
 
         <div className="flex-1">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-x-10 md:gap-y-16">
-            {productList.map((productDetail, i) => (
-              <ProductListCard key={i} productDetail={productDetail} />
-            ))}
-          </div>
+          {/* Show loading indicator while fetching data */}
+          {loading && (
+            <div className="text-center py-10">
+              <span>Loading...</span>
+            </div>
+          )}
+
+          {/* Show error message */}
+          {error && (
+            <div className="text-center py-10 text-red-500">
+              <span>{error}</span>
+            </div>
+          )}
+
+          {/* Display products */}
+          {!loading && !error && productList.length > 0 && (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-x-10 md:gap-y-16">
+              {productList.map((productDetail, i) => (
+                <ProductListCard key={i} productDetail={productDetail} />
+              ))}
+            </div>
+          )}
+
+          {/* Empty state when no products are found */}
+          {!loading && !error && productList.length === 0 && (
+            <div className="text-center py-10">
+              <span>No products found. Try adjusting your filters.</span>
+            </div>
+          )}
         </div>
       </div>
     </div>

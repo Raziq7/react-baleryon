@@ -1,4 +1,4 @@
-import  React, { useState } from "react";
+import React, { useState } from "react";
 import type { KeyboardEvent } from "react";
 import { User } from "lucide-react";
 import { useDispatch } from "react-redux";
@@ -25,6 +25,7 @@ import SignupModal from "../../components/SignupModal";
 import useAuthToken from "../../hooks/useAuthToken";
 import { logoutUserThunk } from "../../store/thunks/authThunks";
 import type { AppDispatch } from "../../store/store";
+import LoaderLottie from "../lottie/Loader";
 
 const Header: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -57,12 +58,24 @@ const Header: React.FC = () => {
   const user = JSON.parse(localStorage.getItem("user") || "{}");
 
   return (
+
     <header className="p-3 lg:p-5 text-black w-full">
       <div className="flex justify-between items-center w-full">
         {/* Logo */}
-        <div style={{ position: "relative", width: "80px", height: "80px", borderRadius: "50%", overflow: "hidden", backgroundColor: "black" }}>
+        <div
+          style={{
+            position: "relative",
+            width: "90px",
+            height: "auto",
+            overflow: "hidden",
+          }}
+        >
           <a href="/">
-            <img src="/logo1.png" alt="Logo" style={{ objectFit: "cover", width: "100%", height: "100%" }} />
+            <img
+              src="/mainLogo.png"
+              alt="Logo"
+              style={{ objectFit: "cover", width: "100%", height: "100%" }}
+            />
           </a>
         </div>
 
@@ -73,7 +86,13 @@ const Header: React.FC = () => {
             alt="Search"
             height={32}
             width={19}
-            style={{ position: "absolute", left: "10px", top: "50%", transform: "translateY(-50%)", cursor: "pointer" }}
+            style={{
+              position: "absolute",
+              left: "10px",
+              top: "50%",
+              transform: "translateY(-50%)",
+              cursor: "pointer",
+            }}
             onClick={handleSearch}
           />
           <input
@@ -89,30 +108,53 @@ const Header: React.FC = () => {
         {/* Desktop Nav */}
         <div className="hidden lg:flex items-center gap-8">
           <ul className="flex gap-10">
-            {["Home", "Product", "About", "Sales", "Contact"].map((text, idx) => (
-              <li key={idx} className="hover:underline hover:text-[#544F51] cursor-pointer">
-                <a href={
-                  text === "Product" ? "/products" :
-                  text === "About" ? "/about-us" :
-                  text === "Contact" ? "/contact-us" : "/"
-                }>
-                  {text}
-                </a>
-              </li>
-            ))}
+            {["Home", "Product", "About", "Sales", "Contact"].map(
+              (text, idx) => (
+                <li
+                  key={idx}
+                  className="hover:underline hover:text-[#544F51] cursor-pointer"
+                >
+                  <a
+                    href={
+                      text === "Product"
+                        ? "/products"
+                        : text === "About"
+                        ? "/about-us"
+                        : text === "Contact"
+                        ? "/contact-us"
+                        : "/"
+                    }
+                  >
+                    {text}
+                  </a>
+                </li>
+              )
+            )}
           </ul>
 
           {/* Icons */}
           <div className="flex items-center gap-6">
             <a href="/mywishlist">
-              <img src="/harts.png" alt="Wishlist" width={24} height={24} className="cursor-pointer" />
+              <img
+                src="/harts.png"
+                alt="Wishlist"
+                width={24}
+                height={24}
+                className="cursor-pointer"
+              />
             </a>
             <Cartpopup />
 
             {!isLogin ? (
               <Dialog>
                 <DialogTrigger>
-                  <img src="/account.png" alt="Account" width={24} height={24} className="cursor-pointer" />
+                  <img
+                    src="/account.png"
+                    alt="Account"
+                    width={24}
+                    height={24}
+                    className="cursor-pointer"
+                  />
                 </DialogTrigger>
                 <DialogContent className="w-[400px]">
                   <DialogHeader>
@@ -126,7 +168,13 @@ const Header: React.FC = () => {
             ) : (
               <Popover>
                 <PopoverTrigger asChild>
-                  <img src="/account.png" alt="Account" width={24} height={24} className="cursor-pointer" />
+                  <img
+                    src="/account.png"
+                    alt="Account"
+                    width={24}
+                    height={24}
+                    className="cursor-pointer"
+                  />
                 </PopoverTrigger>
                 <PopoverContent className="w-56 p-4 bg-white rounded-lg shadow-lg border border-gray-200">
                   <div className="flex gap-4 mb-4 items-center">
@@ -134,17 +182,28 @@ const Header: React.FC = () => {
                       <User className="w-5 h-5" />
                     </div>
                     <div>
-                      <p className="font-medium text-gray-800 text-sm">{user.name}</p>
+                      <p className="font-medium text-gray-800 text-sm">
+                        {user.name}
+                      </p>
                       <p className="text-gray-600 text-xs">{user.email}</p>
                     </div>
                   </div>
 
                   <div className="border-b border-gray-200 mb-4" />
-                  <p className="text-md text-gray-500 mb-2"><a href="/profile">My Account</a></p>
-                  <p className="text-md text-gray-500 mb-2"><a href="/mywishlist">My Wishlist</a></p>
-                  <p className="text-md text-gray-500 mb-4"><a href="/orderList">My Orders</a></p>
+                  <p className="text-md text-gray-500 mb-2">
+                    <a href="/profile">My Account</a>
+                  </p>
+                  <p className="text-md text-gray-500 mb-2">
+                    <a href="/mywishlist">My Wishlist</a>
+                  </p>
+                  <p className="text-md text-gray-500 mb-4">
+                    <a href="/orderList">My Orders</a>
+                  </p>
 
-                  <Button className="w-full bg-red-500 hover:bg-red-600 text-white" onClick={handleLogOut}>
+                  <Button
+                    className="w-full bg-red-500 hover:bg-red-600 text-white"
+                    onClick={handleLogOut}
+                  >
                     Log Out
                   </Button>
                 </PopoverContent>

@@ -17,15 +17,37 @@ export const addToCartThunk = createAsyncThunk<
 >("cart/addToCart", async (cartData, { rejectWithValue }) => {
   try {
     const response = await addToCartData(cartData);
+    console.log(response, "responseresponseresponseresponseresponse");
+
+    // Ensure response is valid
+    if (!response) {
+      return rejectWithValue(
+        "No response from server"
+      ) as unknown as ReturnType<typeof rejectWithValue>;
+    }
+
     return response;
   } catch (error) {
+    console.log(error, "error============================");
+
     if (axios.isAxiosError(error)) {
-      return rejectWithValue(error.response?.data?.message || error.message || "Unknown error");
+      return rejectWithValue(
+        error.response?.data?.message || error.message || "Unknown Axios error"
+      ) as unknown as ReturnType<typeof rejectWithValue>;
     }
-    return rejectWithValue("An unknown error occurred");
+
+    //Handle non-Axios errors (like Error("User is not logged in"))
+    if (error instanceof Error) {
+      return rejectWithValue(error.message) as unknown as ReturnType<
+        typeof rejectWithValue
+      >;
+    }
+
+    return rejectWithValue(
+      "An unknown error occurred"
+    ) as unknown as ReturnType<typeof rejectWithValue>;
   }
 });
-
 // Fetch all cart items
 export const fetchCartItemsThunk = createAsyncThunk<
   CartResponse,
@@ -42,7 +64,9 @@ export const fetchCartItemsThunk = createAsyncThunk<
     return data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
-      return rejectWithValue(error.response?.data?.message || "Failed to fetch cart items");
+      return rejectWithValue(
+        error.response?.data?.message || "Failed to fetch cart items"
+      );
     }
     return rejectWithValue("Unknown error occurred");
   }
@@ -62,26 +86,31 @@ export const updateCartQuantityThunk = createAsyncThunk<
     return data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
-      return rejectWithValue(error.response?.data?.message || "Failed to update cart item");
+      return rejectWithValue(
+        error.response?.data?.message || "Failed to update cart item"
+      );
     }
     return rejectWithValue("Unknown error occurred");
   }
 });
 
 // Clear the entire cart
-export const clearCartThunk = createAsyncThunk<void, void, { rejectValue: string }>(
-  "cart/clearCart",
-  async (_, { rejectWithValue }) => {
-    try {
-      await clearCartData();
-    } catch (error) {
-      if (axios.isAxiosError(error)) {
-        return rejectWithValue(error.response?.data?.message || "Failed to clear cart");
-      }
-      return rejectWithValue("Unknown error occurred");
+export const clearCartThunk = createAsyncThunk<
+  void,
+  void,
+  { rejectValue: string }
+>("cart/clearCart", async (_, { rejectWithValue }) => {
+  try {
+    await clearCartData();
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      return rejectWithValue(
+        error.response?.data?.message || "Failed to clear cart"
+      );
     }
+    return rejectWithValue("Unknown error occurred");
   }
-);
+});
 
 // Remove an item from cart
 export const removeFromCartThunk = createAsyncThunk<
@@ -97,7 +126,9 @@ export const removeFromCartThunk = createAsyncThunk<
     dispatch(fetchCartItemsThunk()); // Refresh the cart
   } catch (error) {
     if (axios.isAxiosError(error)) {
-      return rejectWithValue(error.response?.data?.message || "Failed to remove item from cart");
+      return rejectWithValue(
+        error.response?.data?.message || "Failed to remove item from cart"
+      );
     }
     return rejectWithValue("Unknown error occurred");
   }

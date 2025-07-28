@@ -138,12 +138,16 @@ const cartSlice = createSlice({
 export const selectCart = (state: RootState) => state.cart;
 
 export const selectSubtotal = (state: RootState) => {
-  return state.cart.items.reduce(
+  const items = state?.cart?.items;
+  if (!Array.isArray(items)) return 0;
+
+  return items.reduce(
     (acc: number, item: CartProduct) =>
       acc + (item?.productId?.price || item.price || 0) * item.quantity,
     0
   );
 };
+
 
 export const { removeProductToCart, editCartProduct, clearCartError } = cartSlice.actions;
 export default cartSlice.reducer;

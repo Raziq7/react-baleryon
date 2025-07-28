@@ -1,8 +1,8 @@
 import { useState } from "react";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { Input } from "../../components/ui/input";
+import { Label } from "../../components/ui/label";
 // import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent } from "../../components/ui/card";
 import { User, MapPin, Phone } from "lucide-react";
 import {
   Select,
@@ -10,7 +10,7 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
+} from "../../components/ui/select";
 
 type Address = {
   name: string;

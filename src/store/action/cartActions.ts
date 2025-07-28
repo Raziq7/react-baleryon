@@ -9,8 +9,8 @@ import {
   FETCH_CART_SUCCESS,
   FETCH_CART_ERR,
 } from '@/constant/cartConstants';
-import { AppDispatch } from '@/store/store';
-import api from '@/utils/baseUrl';
+import type { AppDispatch } from '@/store/store';
+import api from '../../utils/baseUrl';
 import { AxiosError } from 'axios';
 
 interface CartItem {

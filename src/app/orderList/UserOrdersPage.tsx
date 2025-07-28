@@ -1,6 +1,5 @@
-'use client'
-import { allOrderList } from '@/api/checkoutApi'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState } from "react";
+import { allOrderList } from "../../api/checkoutApi";
 
 interface OrderItem {
   productId: string;
@@ -29,34 +28,38 @@ interface Order {
   __v: number;
 }
 
-const getStatusStep = (status: string) => {
+const getStatusStep = (status: string): number => {
   switch (status.toLowerCase()) {
-    case 'pending':
+    case "pending":
       return 0;
-    case 'processing':
+    case "processing":
       return 1;
-    case 'shipped':
+    case "shipped":
       return 2;
-    case 'delivered':
+    case "delivered":
       return 3;
     default:
       return 0;
   }
-}
+};
 
-export default function UserOrdersPage() {
-  const [orderList, setOrderList] = useState<Array<Order>>([])
+const UserOrdersPage: React.FC = () => {
+  const [orderList, setOrderList] = useState<Order[]>([]);
 
   const fetchOrderList = async () => {
-    const res = await allOrderList()
-    if (res.success === true) {
-      setOrderList(res.orders)
+    try {
+      const res = await allOrderList();
+      if (res.success === true) {
+        setOrderList(res.orders);
+      }
+    } catch (error) {
+      console.error("Failed to fetch orders", error);
     }
-  }
+  };
 
   useEffect(() => {
-    fetchOrderList()
-  }, [])
+    fetchOrderList();
+  }, []);
 
   return (
     <div className="max-w-5xl mx-auto px-4 py-8">
@@ -66,7 +69,7 @@ export default function UserOrdersPage() {
       ) : (
         <div className="space-y-6">
           {orderList.map((order) => {
-            const currentStep = getStatusStep(order.deliveryStatus)
+            const currentStep = getStatusStep(order.deliveryStatus);
 
             return (
               <div
@@ -83,9 +86,9 @@ export default function UserOrdersPage() {
                     </div>
                     <span
                       className={`px-3 py-1 text-sm rounded-full font-medium ${
-                        order.paymentStatus === 'paid'
-                          ? 'bg-green-100 text-green-700'
-                          : 'bg-red-100 text-red-700'
+                        order.paymentStatus === "paid"
+                          ? "bg-green-100 text-green-700"
+                          : "bg-red-100 text-red-700"
                       }`}
                     >
                       {order.paymentStatus.toUpperCase()}
@@ -105,12 +108,13 @@ export default function UserOrdersPage() {
                 </div>
 
                 <div className="mb-4">
-                  <p className="text-gray-600 text-sm">Total: <span className="font-semibold">${order.amount}</span></p>
-                  <p className="text-gray-600 text-sm">Estimated Delivery:{" "}
+                  <p className="text-gray-600 text-sm">
+                    Total: <span className="font-semibold">${order.amount.toFixed(2)}</span>
+                  </p>
+                  <p className="text-gray-600 text-sm">
+                    Estimated Delivery:{" "}
                     <span className="font-semibold">
-                      {new Date(
-                        new Date(order.createdAt).getTime() + 5 * 24 * 60 * 60 * 1000
-                      ).toLocaleDateString()}
+                      {new Date(new Date(order.createdAt).getTime() + 5 * 24 * 60 * 60 * 1000).toLocaleDateString()}
                     </span>
                   </p>
                 </div>
@@ -119,17 +123,17 @@ export default function UserOrdersPage() {
                 <div className="mt-6">
                   <p className="text-sm font-medium text-gray-700 mb-2">Delivery Status</p>
                   <div className="flex items-center justify-between w-full max-w-xl">
-                    {['Pending', 'Processing', 'Shipped', 'Delivered'].map((label, index) => (
+                    {["Pending", "Processing", "Shipped", "Delivered"].map((label, index) => (
                       <div key={label} className="flex-1 relative">
                         <div
                           className={`w-4 h-4 rounded-full mx-auto z-10 ${
-                            index <= currentStep ? 'bg-blue-600' : 'bg-gray-300'
+                            index <= currentStep ? "bg-blue-600" : "bg-gray-300"
                           }`}
                         ></div>
                         {index < 3 && (
                           <div
                             className={`absolute top-1/2 left-1/2 h-1 w-full transform -translate-x-1/2 -translate-y-1/2 ${
-                              index < currentStep ? 'bg-blue-600' : 'bg-gray-300'
+                              index < currentStep ? "bg-blue-600" : "bg-gray-300"
                             }`}
                           ></div>
                         )}
@@ -139,10 +143,12 @@ export default function UserOrdersPage() {
                   </div>
                 </div>
               </div>
-            )
+            );
           })}
         </div>
       )}
     </div>
-  )
-}
+  );
+};
+
+export default UserOrdersPage;

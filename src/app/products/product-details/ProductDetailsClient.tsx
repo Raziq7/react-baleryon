@@ -1,46 +1,23 @@
-"use client";
-
 import { Minus, Plus } from "lucide-react";
 import React, { useEffect, useState } from "react";
-// import { useDispatch, useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-hot-toast";
 import axios from "axios";
-import Image from "next/image";
+import { useParams } from "react-router-dom";
+import { addToCartThunk } from "../../../store/thunks/cartThunks";
+import type { CartData } from "../../../store/types/cart";
+import type { AppDispatch } from "../../../store/store";
 // import { addToCartThunk } from "@/store/thunks/cartThunks";
+import {
+  selectProduct,
+  selectProductLoading,
+  selectProductError,
+} from "../../../store/slices/productSlice";
+import { fetchProductByIdThunk } from "../../../store/thunks/productThunks";
 
-interface ProductDetailsClientProps {
-  productID: string;
-}
-
-interface ProductSize {
-  size: string;
-  quantity: number;
-  _id: string;
-}
-interface ProductDetail {
-  _id: string;
-  productName: string;
-  description: string;
-  price: number;
-  discount: number;
-  image: string[];
-  category: string;
-  note: string;
-  sizes: ProductSize[];
-  file: string;
-  color: string;
-  productDetails: string;
-  isReturn: boolean;
-  createdAt: string;
-  updatedAt: string;
-  __v: number;
-}
-
-
-
-export default function ProductDetailsClient({ productID }: ProductDetailsClientProps) {
-//  const productID = params.productID;
-  // const dispatch = useDispatch();
+export default function ProductDetailsClient() {
+  const productID = useParams<{ id: string }>().id;
+  const dispatch = useDispatch<AppDispatch>();
 
   // const items = useSelector((state: RootState) => state.cart);
 
@@ -50,8 +27,11 @@ export default function ProductDetailsClient({ productID }: ProductDetailsClient
   const [selectedSize, setSelectedSize] = useState<string | null>(null);
   const [selectedColor, setSelectedColor] = useState<string | null>(null);
   const [quantity, setQuantity] = useState<number>(1);
-  const [productDetails, setProductDetails] = useState<ProductDetail>();
+  // const [productDetails, setProductDetails] = useState<ProductDetail>();
 
+  const productDetails = useSelector(selectProduct);
+  const error = useSelector(selectProductError);
+  const loading = useSelector(selectProductLoading);
   // useEffect(() => {
   //   console.log(items, "items");
   // }, [productID]);
@@ -99,43 +79,46 @@ export default function ProductDetailsClient({ productID }: ProductDetailsClient
     setActiveIndex(index);
   };
 
-
   const handleAddToCart = async () => {
     if (!selectedSize || !selectedColor) {
       toast.error("Please select a size and color.");
       return;
     }
 
-    // const productPayload = {
-    //   _id: productID,
-    //   productName: productDetails?.productName || "",
-    //   price: productDetails?.price || 0,
-    //   image: currentImage,
-    //   size: selectedSize,
-    //   color: selectedColor,
-    //   quantity: quantity,
-    // };
-    // dispatch(addToCartThunk(productPayload));
+    const productPayload: CartData = {
+      productId: productID!, // assert non-null
+      size: selectedSize,
+      color: selectedColor,
+      quantity: quantity,
+    };
+    try {
+      await dispatch(addToCartThunk(productPayload)).unwrap();
+      toast.success("Added to cart");
+    } catch (err) {
+      console.log(err,"errrrrrrrrrrrrrrrrororororoorororororororor");
+      
+      toast.error(err as string); // Will now correctly show: "User is not logged in"
+    }
   };
 
   // const { error } = useSelector((state: RootState) => state.cart);
 
-  const fetchProductDetails = async () => {
-    try {
-      const res = await axios(
-        "http://localhost:8080/api/user/product/getProductDetails?id=" +
-          productID
-      );
-      setProductDetails(res.data);
-      setCurrentImage(res.data.image[0]);
-    } catch (err) {
-      console.log(err);
-    }
-  };
+  // const fetchProductDetails = async () => {
+  //   try {
+  //     const res = await axios(
+  //       "http://localhost:8080/api/user/product/getProductDetails?id=" +
+  //         productID
+  //     );
+  //     setProductDetails(res.data);
+  //     setCurrentImage(res.data.image[0]);
+  //   } catch (err) {
+  //     toast.error("Please select a size and color.");
+  //     console.log(err);
+  //   }
+  // };
 
   useEffect(() => {
-    fetchProductDetails();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    if (productID) dispatch(fetchProductByIdThunk(productID));
   }, [productID]);
 
   return (
@@ -154,13 +137,15 @@ export default function ProductDetailsClient({ productID }: ProductDetailsClient
           {/* Product Gallery Section */}
           <section className="w-full">
             <div className="w-full">
-              <Image
-                src={currentImage}
+              <img
+                src={currentImage || productDetails?.image[0]}
                 alt="Product"
                 width={350}
                 height={350}
+                loading="eager" // Force eager loading
                 className="w-full max-w-[350px] mx-auto object-cover rounded-lg"
               />
+
               <div className="flex gap-2 md:gap-4 p-2 md:p-4 overflow-x-auto">
                 {productDetails?.image.map((thumb, idx) => (
                   <div
@@ -170,12 +155,11 @@ export default function ProductDetailsClient({ productID }: ProductDetailsClient
                     }`}
                     onClick={() => handleImageChange(thumb, idx)}
                   >
-                    <Image
+                    <img
                       src={thumb}
                       alt="Product"
                       width={350}
                       height={350}
-                      priority
                       loading="eager"
                       className="w-full max-w-[350px] mx-auto object-cover rounded-lg"
                     />
@@ -326,7 +310,7 @@ export default function ProductDetailsClient({ productID }: ProductDetailsClient
               </button>
               <button
                 className="flex-1 bg-white text-black border py-2.5 md:py-3 px-3 text-sm md:text-base rounded-lg hover:bg-gray-50 cursor-pointer active:scale-95 transition-transform"
-                onClick={() => handleAddToCart()}
+                onClick={handleAddToCart}
               >
                 ADD TO CART
               </button>
@@ -335,5 +319,5 @@ export default function ProductDetailsClient({ productID }: ProductDetailsClient
         </main>
       </div>
     </div>
-      );
+  );
 }

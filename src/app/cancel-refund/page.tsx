@@ -1,6 +1,4 @@
-import React from 'react'
-
-function page() {
+function CancelRefund() {
   return (
     <div className="min-h-screen bg-gray-100 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-3xl mx-auto">
@@ -43,4 +41,4 @@ function page() {
   )
 }
 
-export default page
+export default CancelRefund

@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import type { ProductDetailInterface } from "../../store/types/product";
+import type { ProductDetail } from "../../store/types/product";
 import { useDispatch, useSelector } from "react-redux";
 import { Heart,Trash } from "lucide-react";
 import type { RootState } from "../../store/store";
@@ -8,15 +8,21 @@ import { toggleWishlistItem, initializeWishlist } from "../../store/slices/wishl
 import { addToWishlist } from "../../api/wishlistApi";
 
 
-interface Props {
+interface ProductCardProps {
   prodctname: string;
   prodctID: string;
   price: number;
   image: string;
-  productDetail: ProductDetailInterface;
+    productDetail: ProductDetail;
 }
 
-const ProductCard: React.FC<Props> = ({ prodctname, prodctID, price, image }) => {
+export const ProductCard: React.FC<ProductCardProps> = ({
+  prodctname,
+  prodctID,
+  price,
+  image,
+  productDetail
+}) => {
   const navigate = useNavigate();
 
   return (
@@ -40,21 +46,18 @@ const ProductCard: React.FC<Props> = ({ prodctname, prodctID, price, image }) =>
   );
 };
 
-export default ProductCard;
+// ------------- ProductCard2 Component -------------------
 
-
-
-
-interface Props {
+interface ProductCard2Props {
   prodctname: string;
   prodctID: string;
   index: number;
   price: number;
   image: string;
-  productDetail: ProductDetailInterface;
+  productDetail: ProductDetail;
 }
 
-export const ProductCard2: React.FC<Props> = ({
+export const ProductCard2: React.FC<ProductCard2Props> = ({
   prodctname,
   prodctID,
   price,
@@ -69,7 +72,7 @@ export const ProductCard2: React.FC<Props> = ({
     dispatch(initializeWishlist());
   }, [dispatch]);
 
-  const isInWishlist = wishlistItems.some(item => item._id === prodctID);
+  const isInWishlist = wishlistItems.some((item) => item._id === prodctID);
 
   const handleWishlistToggle = () => {
     dispatch(toggleWishlistItem(productDetail));
@@ -78,10 +81,19 @@ export const ProductCard2: React.FC<Props> = ({
 
   return (
     <div className="p-3 bg-white rounded shadow-md">
-      <img src={image || "/cardProductImage.png"} alt="cardImage" className="w-full rounded mb-3" />
+      <img
+        src={image || "/cardProductImage.png"}
+        alt="cardImage"
+        className="w-full rounded mb-3"
+      />
       <div className="flex justify-between">
-        <p onClick={() => navigate(`/products/product-details/${prodctID}`)} className="cursor-pointer">{prodctname}</p>
-        <button onClick={handleWishlistToggle}>
+        <p
+          onClick={() => navigate(`/products/product-details/${prodctID}`)}
+          className="cursor-pointer"
+        >
+          {prodctname}
+        </p>
+        <button onClick={handleWishlistToggle} aria-label="Toggle Wishlist">
           {isInWishlist ? <Heart color="red" fill="red" /> : <Heart />}
         </button>
       </div>
@@ -90,18 +102,33 @@ export const ProductCard2: React.FC<Props> = ({
   );
 };
 
+// ------------- ProductListCard Component -------------------
 
+interface ProductListCardProps {
+  productDetail: ProductDetail;
+}
 
-
-export const ProductListCard: React.FC<{ productDetail: ProductDetailInterface }> = ({ productDetail }) => {
+export const ProductListCard: React.FC<ProductListCardProps> = ({
+  productDetail,
+}) => {
   const navigate = useNavigate();
+console.log(productDetail,"productDetailproductDetailproductDetailproductDetailproductDetail");
 
   return (
     <div className="shadow-lg rounded group">
       <div className="relative">
-        <img src={productDetail.image[0]} alt="product" className="w-full h-auto" />
+        <img
+          src={productDetail.image[0]}
+          alt={productDetail.productName}
+          className="w-full h-auto"
+        />
         <div className="absolute bottom-0 w-full opacity-0 translate-y-4 transition-all group-hover:opacity-100 group-hover:translate-y-0">
-          <button className="w-full py-3 bg-black text-white" onClick={() => navigate(`/products/product-details/${productDetail._id}`)}>View Product</button>
+          <button
+            className="w-full py-3 bg-black text-white"
+            onClick={() => navigate(`/products/product-details/${productDetail._id}`)}
+          >
+            View Product
+          </button>
         </div>
       </div>
       <div className="p-3">
@@ -118,22 +145,34 @@ export const ProductListCard: React.FC<{ productDetail: ProductDetailInterface }
   );
 };
 
+// ------------- WishListCard Component -------------------
 
-interface Props {
-  productDetail: ProductDetailInterface;
+interface WishListCardProps {
+  productDetail: ProductDetail;
   removeProduct: () => void;
 }
 
-export const WishListCard: React.FC<Props> = ({ productDetail, removeProduct }) => {
+export const WishListCard: React.FC<WishListCardProps> = ({
+  productDetail,
+  removeProduct,
+}) => {
   const navigate = useNavigate();
 
   return (
     <div className="shadow-lg rounded group">
       <div className="relative">
-        <button className="absolute top-3 right-3" onClick={removeProduct}>
+        <button
+          className="absolute top-3 right-3"
+          onClick={removeProduct}
+          aria-label="Remove from wishlist"
+        >
           <Trash />
         </button>
-        <img src={productDetail.image[0]} alt="wishlist" className="w-full h-auto" />
+        <img
+          src={productDetail.image[0]}
+          alt={productDetail.productName}
+          className="w-full h-auto"
+        />
         <div className="absolute bottom-0 w-full opacity-0 group-hover:opacity-100 transition">
           <button
             className="w-full py-4 bg-black text-white"

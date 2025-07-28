@@ -93,10 +93,10 @@ const WishlistPage = () => {
             {productList.map((product, index) => (
               <WishListCard
                 key={product._id}
-                prodctname={product.productName} // ✅ fixed field name
+                prodctname={product.productName} // | fixed field name
                 prodctID={product._id}
                 price={product.price}
-                image={product.image[0]} // ✅ take first image
+                image={product.image[0]} // | take first image
                 index={index}
                 productDetail={product} // also pass this if needed
                 removeProduct={() => removeProductFromWishlist(product)}

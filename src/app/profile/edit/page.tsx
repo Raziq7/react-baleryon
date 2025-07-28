@@ -1,41 +1,48 @@
-'use client';
-
 import React, { useEffect, useState } from 'react';
-import api from '@/utils/baseUrl';
-import { useRouter } from 'next/navigation';
+import { useNavigate } from 'react-router-dom'; // replaces next/navigation
+import api from '../../../utils/baseUrl';
 
-export default function EditProfilePage() {
+const EditProfilePage: React.FC = () => {
   const [formData, setFormData] = useState({
     name: '',
     phone: '',
     gender: '',
   });
+
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
-  const router = useRouter();
+  const navigate = useNavigate(); // replaces useRouter()
 
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const token = localStorage.getItem("token");
-        const res = await api.get("/api/user/profile", {
+        const token = localStorage.getItem('token');
+        const res = await api.get('/api/user/profile', {
           headers: {
             Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
+            'Content-Type': 'application/json',
           },
         });
+
         const { firstName, phone, gender } = res.data.user;
-        setFormData({ name:firstName, phone: phone || '', gender: gender || '' });
+        setFormData({
+          name: firstName,
+          phone: phone || '',
+          gender: gender || '',
+        });
       } catch (err) {
         console.error('Failed to fetch profile', err);
       } finally {
         setLoading(false);
       }
     };
+
     fetchProfile();
   }, []);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
@@ -43,15 +50,16 @@ export default function EditProfilePage() {
     e.preventDefault();
     setSaving(true);
     try {
-      const token = localStorage.getItem("token");
-      await api.put('/api/user/profile', formData,{
+      const token = localStorage.getItem('token');
+      await api.put('/api/user/profile', formData, {
         headers: {
           Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
-      });;
+      });
+
       alert('Profile updated successfully!');
-      router.push('/profile');
+      navigate('/profile'); // replaces router.push('/profile')
     } catch (error) {
       console.error('Update failed:', error);
       alert('Something went wrong.');
@@ -60,7 +68,9 @@ export default function EditProfilePage() {
     }
   };
 
-  if (loading) return <div className="p-10 text-center">Loading...</div>;
+  if (loading) {
+    return <div className="p-10 text-center">Loading...</div>;
+  }
 
   return (
     <div className="min-h-screen bg-white dark:bg-black text-black dark:text-white px-4 py-10">
@@ -118,4 +128,6 @@ export default function EditProfilePage() {
       </div>
     </div>
   );
-}
+};
+
+export default EditProfilePage;

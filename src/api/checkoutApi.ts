@@ -1,5 +1,4 @@
-"use client";
-import api from "@/utils/baseUrl";
+import api from "../utils/baseUrl";
 
 interface address {
   name: string;

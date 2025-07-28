@@ -59,7 +59,9 @@ const CustomCurosel: React.FC = () => {
                 <CardContent className="p-0">
                   <div className="w-full aspect-[16/6] sm:aspect-[16/5] md:aspect-[16/4] lg:aspect-[16/5] overflow-hidden rounded-md">
                     <img
-                      src={banner.image}
+                      src={banner?.image}
+                      data-src={banner?.image}
+                      loading="lazy"
                       alt="Banner"
                       className="object-cover w-full h-full transition-transform duration-500 ease-in-out transform hover:scale-105"
                     />

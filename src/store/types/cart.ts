@@ -7,11 +7,13 @@ export interface CartData {
   color: string;
 }
 
+
 export interface ProductInCart {
   _id: string;
   productName: string;
   image: string[];
   price: number;
+  discount:number;
 }
 
 export interface CartProduct {
@@ -32,6 +34,8 @@ export interface CartResponse {
   subtotal: number;
   userId: string;
 }
+
+
 
 export interface updateCartQuantity {
   userId: string;

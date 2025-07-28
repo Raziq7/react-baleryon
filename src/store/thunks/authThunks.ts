@@ -1,7 +1,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
-// ✅ Type-only import (important with verbatimModuleSyntax enabled)
+// | Type-only import (important with verbatimModuleSyntax enabled)
 import type { LoginRequest, OtpVerificationData, SignUpRequest } from "../types/auth";
 
 // API function imports

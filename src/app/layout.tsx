@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Toaster } from "react-hot-toast"; // ✅ Import this at the top
+import { Toaster } from "react-hot-toast"; // | Import this at the top
 import { Geist, Geist_Mono, Inria_Serif } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/layout/header";
